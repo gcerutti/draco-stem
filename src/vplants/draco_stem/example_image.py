@@ -23,9 +23,9 @@ import numpy as np
 from scipy import ndimage as nd
 from scipy.cluster.vq import vq
 
-from openalea.container import array_dict
+from vplants.container import array_dict
 
-from openalea.image.spatial_image import SpatialImage
+from timagetk.components import SpatialImage
 
 def sphere_tissue_image(size=100, n_points=12, n_layers=1):
 

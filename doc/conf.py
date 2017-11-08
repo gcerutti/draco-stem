@@ -85,8 +85,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'openalea.draco_stem'
-copyright = u'2015, openalea.draco_stem'
+project = u'vplants.draco_stem'
+copyright = u'2015, vplants.draco_stem'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -95,7 +95,7 @@ copyright = u'2015, openalea.draco_stem'
 
 # find version number in /src/$pkg_pth/version.py
 pkgver = {}
-with open("../src/openalea/draco_stem/version.py") as fp:
+with open("../src/vplants/draco_stem/version.py") as fp:
     exec(fp.read(), pkgver)
 
 # The short X.Y version.

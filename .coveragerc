@@ -1,10 +1,10 @@
 # {# pkglts, coverage
 [html]
-title = openalea.draco_stem's coverage
+title = vplants.draco_stem's coverage
 directory = build/htmlcov
 
 [run]
-source = openalea.draco_stem
+source = vplants.draco_stem
 
 [report]
 exclude_lines =

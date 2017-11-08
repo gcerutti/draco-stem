@@ -24,12 +24,12 @@ from scipy import ndimage as nd
 
 from scipy.cluster.vq import kmeans, vq
 
-from openalea.container.array_dict import array_dict
-from openalea.container.property_topomesh import PropertyTopomesh
-from openalea.mesh.property_topomesh_analysis import *
-from openalea.mesh.utils.tissue_analysis_tools import cell_vertex_extraction
-from openalea.mesh.utils.array_tools import array_unique
-from openalea.container.topomesh_algo import is_collapse_topo_allowed, collapse_edge
+from vplants.container.array_dict import array_dict
+from vplants.container.property_topomesh import PropertyTopomesh
+from vplants.cellcomplex.property_topomesh.property_topomesh_analysis import *
+from vplants.cellcomplex.property_topomesh.utils.tissue_analysis_tools import cell_vertex_extraction
+from vplants.cellcomplex.property_topomesh.utils.array_tools import array_unique
+from vplants.container.topomesh_algo import is_collapse_topo_allowed, collapse_edge
 from vplants.tissue_analysis.temporal_graph_from_image import graph_from_image
 
 
@@ -137,7 +137,7 @@ def evaluate_topomesh_quality(topomesh,quality_criteria=["Mesh Complexity","Tria
         start_time = time()
         print "--> Computing image accuracy"
 
-        from openalea.mesh.utils.image_tools import compute_topomesh_image
+        from vplants.cellcomplex.property_topomesh.utils.image_tools import compute_topomesh_image
 
         topomesh_img = compute_topomesh_image(topomesh,image)
 

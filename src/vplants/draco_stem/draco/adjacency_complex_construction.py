@@ -3,22 +3,22 @@ from scipy import ndimage as nd
 
 from scipy.cluster.vq import kmeans, vq
 
-from openalea.image.spatial_image import SpatialImage
-from openalea.image.serial.all import imread, imsave
+from timagetk.components import SpatialImage
+from timagetk.components import imread, imsave
 
 from vplants.tissue_analysis.temporal_graph_from_image import graph_from_image
 from vplants.tissue_analysis.spatial_image_analysis import SpatialImageAnalysis
 
-from openalea.container import array_dict, PropertyTopomesh
+from vplants.container import array_dict, PropertyTopomesh
 
-from openalea.mesh.utils.tissue_analysis_tools import cell_vertex_extraction
+from vplants.cellcomplex.property_topomesh.utils.tissue_analysis_tools import cell_vertex_extraction
 
-from openalea.mesh.property_topomesh_analysis import *
+from vplants.cellcomplex.property_topomesh.property_topomesh_analysis import *
 
-from openalea.mesh.utils.intersection_tools import inside_triangle, intersecting_segment, intersecting_triangle
-from openalea.mesh.utils.evaluation_tools import jaccard_index
-from openalea.mesh.utils.array_tools import array_unique
-from openalea.mesh.utils.geometry_tools import tetra_geometric_features, triangle_geometric_features
+from vplants.cellcomplex.property_topomesh.utils.intersection_tools import inside_triangle, intersecting_segment, intersecting_triangle
+from vplants.cellcomplex.property_topomesh.utils.evaluation_tools import jaccard_index
+from vplants.cellcomplex.property_topomesh.utils.array_tools import array_unique
+from vplants.cellcomplex.property_topomesh.utils.geometry_tools import tetra_geometric_features, triangle_geometric_features
 
 from sys                                    import argv
 from time                                   import time, sleep

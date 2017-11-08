@@ -24,20 +24,20 @@ from scipy import ndimage as nd
 
 from scipy.cluster.vq import kmeans, vq
 
-from openalea.image.spatial_image import SpatialImage
-from openalea.image.serial.all import imread, imsave
+from timagetk.components import SpatialImage
+from timagetk.components import imread, imsave
 
 from vplants.tissue_analysis.temporal_graph_from_image import graph_from_image
 from vplants.tissue_analysis.spatial_image_analysis import SpatialImageAnalysis
-from openalea.mesh.utils.tissue_analysis_tools  import cell_vertex_extraction
+from vplants.cellcomplex.property_topomesh.utils.tissue_analysis_tools  import cell_vertex_extraction
 
-from openalea.container.array_dict import array_dict
-from openalea.container.property_topomesh import PropertyTopomesh
-from openalea.mesh.property_topomesh_analysis import *
-from openalea.mesh.utils.intersection_tools import inside_triangle, intersecting_segment, intersecting_triangle
-from openalea.mesh.utils.array_tools  import array_unique
-from openalea.mesh.utils.geometry_tools import triangle_geometric_features
-from openalea.mesh.property_topomesh_optimization import topomesh_triangle_split
+from vplants.container.array_dict import array_dict
+from vplants.container.property_topomesh import PropertyTopomesh
+from vplants.cellcomplex.property_topomesh.property_topomesh_analysis import *
+from vplants.cellcomplex.property_topomesh.utils.intersection_tools import inside_triangle, intersecting_segment, intersecting_triangle
+from vplants.cellcomplex.property_topomesh.utils.array_tools  import array_unique
+from vplants.cellcomplex.property_topomesh.utils.geometry_tools import triangle_geometric_features
+from vplants.cellcomplex.property_topomesh.property_topomesh_optimization import topomesh_triangle_split
 
 from time                                   import time, sleep
 
@@ -437,8 +437,8 @@ def tetrahedra_dual_triangular_topomesh(triangulation_topomesh,image_cell_vertex
     if len(triangular) == 0 or triangular is None:
         return image_topomesh
     else:
-        from openalea.mesh.property_topomesh_optimization import property_topomesh_edge_split_optimization, property_topomesh_edge_flip_optimization
-        from openalea.draco_stem.stem.tissue_mesh_optimization import optimize_topomesh
+        from vplants.cellcomplex.property_topomesh.property_topomesh_optimization import property_topomesh_edge_split_optimization, property_topomesh_edge_flip_optimization
+        from vplants.draco_stem.stem.tissue_mesh_optimization import optimize_topomesh
 
 
         if 'star' in triangular:
@@ -517,7 +517,7 @@ def tetrahedra_dual_triangular_topomesh(triangulation_topomesh,image_cell_vertex
 
 
 def triangulated_interface_topomesh(image_topomesh,maximal_length,inner_interfaces=True):
-    from openalea.mesh.utils.delaunay_tools import delaunay_triangulation
+    from vplants.cellcomplex.property_topomesh.utils.delaunay_tools import delaunay_triangulation
 
     triangle_edge_list  = np.array([[1, 2],[0, 2],[0, 1]])
 
@@ -1010,7 +1010,7 @@ def delaunay_interface_topomesh(image_topomesh,inner_interfaces=True):
 
     def array_delaunay(points,indices):
         # from openalea.plantgl.algo import delaunay_triangulation
-        from openalea.mesh.utils.delaunay_tools import delaunay_triangulation
+        from vplants.cellcomplex.property_topomesh.utils.delaunay_tools import delaunay_triangulation
         import numpy as np
         if len(indices)>3:
             triangulation = delaunay_triangulation(points)

@@ -24,23 +24,23 @@ from scipy import ndimage as nd
 
 from scipy.cluster.vq import kmeans, vq
 
-from openalea.image.spatial_image import SpatialImage
-from openalea.image.serial.all import imread, imsave
+from timagetk.components import SpatialImage
+from timagetk.components import imread, imsave
 
 from vplants.tissue_analysis.temporal_graph_from_image import graph_from_image
 from vplants.tissue_analysis.spatial_image_analysis import SpatialImageAnalysis
 
-from openalea.container import array_dict, PropertyTopomesh
+from vplants.container import array_dict, PropertyTopomesh
 
-from openalea.mesh.utils.tissue_analysis_tools import cell_vertex_extraction
+from vplants.cellcomplex.property_topomesh.utils.tissue_analysis_tools import cell_vertex_extraction
 
-from openalea.mesh.property_topomesh_analysis import *
-from openalea.mesh.property_topomesh_extraction import clean_topomesh
+from vplants.cellcomplex.property_topomesh.property_topomesh_analysis import *
+from vplants.cellcomplex.property_topomesh.property_topomesh_extraction import clean_topomesh
 
-from openalea.mesh.utils.intersection_tools import inside_triangle, intersecting_segment, intersecting_triangle
-from openalea.mesh.utils.evaluation_tools import jaccard_index
-from openalea.mesh.utils.array_tools import array_unique
-from openalea.mesh.utils.geometry_tools import tetra_geometric_features, triangle_geometric_features
+from vplants.cellcomplex.property_topomesh.utils.intersection_tools import inside_triangle, intersecting_segment, intersecting_triangle
+from vplants.cellcomplex.property_topomesh.utils.evaluation_tools import jaccard_index
+from vplants.cellcomplex.property_topomesh.utils.array_tools import array_unique
+from vplants.cellcomplex.property_topomesh.utils.geometry_tools import tetra_geometric_features, triangle_geometric_features
 
 from sys                                    import argv
 from time                                   import time, sleep
@@ -562,8 +562,8 @@ def delaunay_tetrahedrization_topomesh(positions, image_cell_vertex=None, **kwar
     """
 
     # from openalea.plantgl.algo import delaunay_triangulation3D, delaunay_triangulation
-    from openalea.mesh.utils.delaunay_tools import delaunay_triangulation
-    from openalea.mesh.utils.geometry_tools import tetra_geometric_features
+    from vplants.cellcomplex.property_topomesh.utils.delaunay_tools import delaunay_triangulation
+    from vplants.cellcomplex.property_topomesh.utils.geometry_tools import tetra_geometric_features
 
     points = positions.keys()
 
@@ -656,8 +656,8 @@ def tetrahedrization_clean_surface(initial_triangulation_topomesh, image_cell_ve
     surface_topomesh = kwargs.get('surface_topomesh',None)
 
     if surface_topomesh is None and binary_image is not None:
-        from openalea.mesh.utils.implicit_surfaces import implicit_surface_topomesh
-        from openalea.draco_stem.stem.tissue_mesh_optimization import optimize_topomesh
+        from vplants.cellcomplex.property_topomesh.utils.implicit_surfaces import implicit_surface_topomesh
+        from vplants.draco_stem.stem.tissue_mesh_optimization import optimize_topomesh
         
         grid_voxelsize = kwargs.get('grid_voxelsize',[8,8,8])
         grid_binary_image = binary_image[0:binary_image.shape[0]:grid_voxelsize[0],0:binary_image.shape[1]:grid_voxelsize[1],0:binary_image.shape[2]:grid_voxelsize[2]]
@@ -870,8 +870,8 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
         * triangulation_topomesh : a PropertyTopomesh contianing the optimized tetrahedrization
     """
 
-    from openalea.mesh.utils.array_tools import array_unique, array_difference
-    from openalea.mesh.utils.geometry_tools import tetra_geometric_features
+    from vplants.cellcomplex.property_topomesh.utils.array_tools import array_unique, array_difference
+    from vplants.cellcomplex.property_topomesh.utils.geometry_tools import tetra_geometric_features
     from copy import deepcopy
 
     triangulation_topomesh = deepcopy(input_triangulation_topomesh)
@@ -956,7 +956,7 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
             projected_edge_neighbors = np.array(map(project,edge_exterior_positions(positions,exterior_positions,edge_neighbor_cells),edge_middles,edge_vectors))
             
             def array_delaunay(points,indices):
-                from openalea.mesh.utils.delaunay_tools import delaunay_triangulation
+                from vplants.cellcomplex.property_topomesh.utils.delaunay_tools import delaunay_triangulation
                 #from openalea.plantgl.algo import delaunay_triangulation
                 # import numpy as np
                 if len(indices)>3:
@@ -1240,7 +1240,7 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                     triangle_energy_variation += omega_energies['adjacency']*triangle_adjacency_energy_variation
                 
                 if omega_energies.has_key('geometry'):
-                    from openalea.mesh.utils.geometry_tools import tetra_geometric_features
+                    from vplants.cellcomplex.property_topomesh.utils.geometry_tools import tetra_geometric_features
                     
                     triangle_tetra_max_distance = np.array([tetra_geometric_features(triangle_tetras[t],triangle_positions[t],features=['max_distance']) for t in xrange(len(triangle_tetras))])
                     triangle_flipped_tetra_max_distance = np.array([tetra_geometric_features(triangle_flipped_tetras[t],triangle_positions[t],features=['max_distance']) for t in xrange(len(triangle_tetras))])
@@ -1450,7 +1450,7 @@ def compute_tetrahedrization_geometrical_properties(triangulation_topomesh, norm
 
     compute_tetrahedrization_topological_properties(triangulation_topomesh)
 
-    from openalea.mesh.utils.implicit_surfaces import point_spherical_density
+    from vplants.cellcomplex.property_topomesh.utils.implicit_surfaces import point_spherical_density
 
         
     positions = triangulation_topomesh.wisp_property('barycenter',0)

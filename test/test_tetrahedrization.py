@@ -22,15 +22,15 @@
 import numpy as np
 from scipy import ndimage as nd
 
-from openalea.container import array_dict
+from vplants.container import array_dict
 
-from openalea.mesh.property_topomesh_creation import tetrahedra_topomesh
+from vplants.cellcomplex.property_topomesh.property_topomesh_creation import tetrahedra_topomesh
 
-from openalea.draco_stem.draco.adjacency_complex_optimization import tetrahedrization_topomesh_topological_optimization
-from openalea.draco_stem.draco.adjacency_complex_optimization import tetrahedrization_topomesh_remove_exterior, tetrahedrization_topomesh_add_exterior
-from openalea.draco_stem.draco.adjacency_complex_optimization import compute_tetrahedrization_topological_properties, compute_tetrahedrization_geometrical_properties
+from vplants.draco_stem.draco.adjacency_complex_optimization import tetrahedrization_topomesh_topological_optimization
+from vplants.draco_stem.draco.adjacency_complex_optimization import tetrahedrization_topomesh_remove_exterior, tetrahedrization_topomesh_add_exterior
+from vplants.draco_stem.draco.adjacency_complex_optimization import compute_tetrahedrization_topological_properties, compute_tetrahedrization_geometrical_properties
 
-from openalea.mesh.utils.evaluation_tools import jaccard_index
+from vplants.cellcomplex.property_topomesh.utils.evaluation_tools import jaccard_index
 
 
 def octahedron_tetrahedra(side_length=15.):

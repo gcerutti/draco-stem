@@ -22,14 +22,14 @@
 import numpy as np
 from scipy import ndimage as nd
 
-from openalea.container import array_dict
+from vplants.container import array_dict
 
-from openalea.mesh.property_topomesh_analysis import compute_topomesh_property
-from openalea.mesh.utils.evaluation_tools import jaccard_index
+from vplants.cellcomplex.property_topomesh.property_topomesh_analysis import compute_topomesh_property
+from vplants.cellcomplex.property_topomesh.utils.evaluation_tools import jaccard_index
 
-from openalea.draco_stem.draco.draco import DracoMesh
+from vplants.draco_stem.draco.draco import DracoMesh
 
-from openalea.draco_stem.example_image import sphere_tissue_image
+from vplants.draco_stem.example_image import sphere_tissue_image
 
 def test_draco():
     n_points = 12

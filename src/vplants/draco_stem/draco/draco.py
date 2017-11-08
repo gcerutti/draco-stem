@@ -25,27 +25,26 @@ from scipy.cluster.vq import vq
 from copy import deepcopy
 import pickle
 
-from openalea.deploy.shared_data import shared_data
-
-from openalea.image.spatial_image import SpatialImage
-from openalea.image.serial.all import imread, imsave
+from timagetk.components import SpatialImage
+from timagetk.components import imread, imsave
 
 from vplants.tissue_analysis.temporal_graph_from_image import graph_from_image
 from vplants.tissue_analysis.spatial_image_analysis import SpatialImageAnalysis
 
-from openalea.container import array_dict
-from openalea.mesh import PropertyTopomesh, TriangularMesh
-from openalea.mesh.property_topomesh_creation import vertex_topomesh, edge_topomesh, triangle_topomesh, tetrahedra_topomesh
-from openalea.mesh.property_topomesh_analysis import compute_topomesh_property
+from vplants.container import array_dict
+from vplants.cellcomplex.property_topomesh import PropertyTopomesh
+from vplants.cellcomplex.triangular_mesh import TriangularMesh
+from vplants.cellcomplex.property_topomesh.property_topomesh_creation import vertex_topomesh, edge_topomesh, triangle_topomesh, tetrahedra_topomesh
+from vplants.cellcomplex.property_topomesh.property_topomesh_analysis import compute_topomesh_property
 
-from openalea.mesh.utils.tissue_analysis_tools import cell_vertex_extraction
-from openalea.mesh.utils.intersection_tools import intersecting_triangle
+from vplants.cellcomplex.property_topomesh.utils.tissue_analysis_tools import cell_vertex_extraction
+from vplants.cellcomplex.property_topomesh.utils.intersection_tools import intersecting_triangle
 
-from openalea.draco_stem.draco.adjacency_complex_optimization import delaunay_tetrahedrization_topomesh, clean_tetrahedrization, compute_tetrahedrization_geometrical_properties, triangles_from_adjacency_edges
-from openalea.draco_stem.draco.adjacency_complex_optimization import tetrahedrization_topomesh_topological_optimization, tetrahedrization_topomesh_add_exterior, tetrahedrization_topomesh_remove_exterior
-from openalea.draco_stem.draco.adjacency_complex_construction import layer_triangle_topomesh_construction, layered_tetrahedra_topomesh_construction
+from vplants.draco_stem.draco.adjacency_complex_optimization import delaunay_tetrahedrization_topomesh, clean_tetrahedrization, compute_tetrahedrization_geometrical_properties, triangles_from_adjacency_edges
+from vplants.draco_stem.draco.adjacency_complex_optimization import tetrahedrization_topomesh_topological_optimization, tetrahedrization_topomesh_add_exterior, tetrahedrization_topomesh_remove_exterior
+from vplants.draco_stem.draco.adjacency_complex_construction import layer_triangle_topomesh_construction, layered_tetrahedra_topomesh_construction
 
-from openalea.draco_stem.draco.dual_reconstruction import tetrahedra_dual_triangular_topomesh
+from vplants.draco_stem.draco.dual_reconstruction import tetrahedra_dual_triangular_topomesh
 
 
 class DracoMesh(object):
@@ -331,7 +330,7 @@ class DracoMesh(object):
 
         binary_img = binary_img[0:binary_img.shape[0]:grid_voxelsize[0],0:binary_img.shape[1]:grid_voxelsize[1],0:binary_img.shape[2]:grid_voxelsize[2]]
 
-        from openalea.mesh.utils.implicit_surfaces import implicit_surface_topomesh
+        from vplants.cellcomplex.property_topomesh.utils.implicit_surfaces import implicit_surface_topomesh
         self.surface_topomesh = implicit_surface_topomesh(binary_img,binary_img.shape,self.voxelsize*grid_voxelsize)
         self.surface_topomesh.update_wisp_property('barycenter',0,self.surface_topomesh.wisp_property('barycenter',0).values()+np.array(binary_img.shape)*self.voxelsize*grid_voxelsize/4.)
 
@@ -448,7 +447,7 @@ def create_draco_topomesh(image, n_iterations=3, reconstruction_triangulation=No
                 * *exact* : ensure cell vertices are well preserved during all geometrical optimization processes
 
     Returns:
-        dual_reconstruction_topomesh (:class:`openalea.mesh.PropertyTopomesh`):
+        dual_reconstruction_topomesh (:class:`vplants.cellcomplex.property_topomesh.PropertyTopomesh`):
             The PropertyTopomesh representing the geometry of the tissue.
 
     """
@@ -476,7 +475,7 @@ def draco_initialization(image=None, image_file=None, cell_vertex_file=None):
                 Default values for dual reconstruction triangulation (see draco_dual_reconstruction for more details)
 
         Returns:
-            draco (:class:`openalea.draco_stem.draco.DracoMesh`):
+            draco (:class:`vplants.draco_stem.draco.DracoMesh`):
                 A DracoMesh containing adjacency information on the image cells.
         """
     return DracoMesh(image, image_file, cell_vertex_file)

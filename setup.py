@@ -12,26 +12,14 @@ readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 
-def parse_requirements(fname):
-    with open(fname, 'r') as f:
-        txt = f.read()
-
-    reqs = []
-    for line in txt.splitlines():
-        line = line.strip()
-        if len(line) > 0 and not line.startswith("#"):
-            reqs.append(line)
-
-    return reqs
-
-# find version number in src/openalea/draco_stem/version.py
+# find version number in src/vplants/draco_stem/version.py
 version = {}
-with open("src/openalea/draco_stem/version.py") as fp:
+with open("src/vplants/draco_stem/version.py") as fp:
     exec(fp.read(), version)
 
 
 setup_kwds = dict(
-    name='openalea.draco_stem',
+    name='vplants.draco_stem',
     version=version["__version__"],
     description=short_descr,
     long_description=readme + '\n\n' + history,
@@ -43,8 +31,14 @@ setup_kwds = dict(
 
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=parse_requirements("requirements.txt"),
-    tests_require=parse_requirements("dvlpt_requirements.txt"),
+    install_requires=[
+        ],
+    tests_require=[
+        "coverage",
+        "mock",
+        "nose",
+        "sphinx",
+        ],
     entry_points={},
     keywords='',
     test_suite='nose.collector',

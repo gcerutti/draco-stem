@@ -22,11 +22,11 @@
 import numpy as np
 from scipy.cluster.vq import vq
 
-from openalea.container import array_dict
+from vplants.container import array_dict
 
-from openalea.mesh import PropertyTopomesh
-from openalea.mesh.property_topomesh_analysis import compute_topomesh_property, compute_topomesh_triangle_properties
-from openalea.mesh.property_topomesh_optimization import property_topomesh_vertices_deformation, property_topomesh_edge_flip_optimization
+from vplants.cellcomplex.property_topomesh import PropertyTopomesh
+from vplants.cellcomplex.property_topomesh.property_topomesh_analysis import compute_topomesh_property, compute_topomesh_triangle_properties
+from vplants.cellcomplex.property_topomesh.property_topomesh_optimization import property_topomesh_vertices_deformation, property_topomesh_edge_flip_optimization
 
 from copy import deepcopy
 from time import time
