@@ -68,7 +68,7 @@ def layer_triangle_topomesh_construction(layer_edge_topomesh, positions, omega_c
         
     while len(free_edges) > 0:
         eid_to_add = free_edges.pop(0)
-        print "--> Edge",list(layer_edge_topomesh.borders(1,eid_to_add))," : ",edge_neighbor_weights[eid_to_add]
+        # print "--> Edge",list(layer_edge_topomesh.borders(1,eid_to_add))," : ",edge_neighbor_weights[eid_to_add]
         
         edge_vertex_edges = np.concatenate([list(set(layer_edge_topomesh.regions(0,c)).difference({eid_to_add})) for c in layer_edge_topomesh.borders(1,eid_to_add)])
         edge_vertex_edge_vertices =  np.concatenate([c*np.ones(layer_edge_topomesh.nb_regions(0,c)-1) for c in layer_edge_topomesh.borders(1,eid_to_add)])
@@ -92,7 +92,7 @@ def layer_triangle_topomesh_construction(layer_edge_topomesh, positions, omega_c
                     if layer_triangulation_topomesh.nb_wisps(2)!=1 or vq(np.sort([triangle_vertices]),np.sort([list(layer_triangulation_topomesh.borders(2,t,2)) for t in layer_triangulation_topomesh.wisps(2)]))[1][0]>0:
                         fid = layer_triangulation_topomesh.add_wisp(2)
                         layer_triangulation_topomesh.link(3,1,fid)
-                        print "  --> Triangle",fid,triangle_vertices," : ",edge_weights.values(triangle_edges[1:]).min()
+                        # print "  --> Triangle",fid,triangle_vertices," : ",edge_weights.values(triangle_edges[1:]).min()
                         for c in triangle_vertices:
                             if not layer_triangulation_topomesh.has_wisp(0,c):
                                 layer_triangulation_topomesh.add_wisp(0,c)
@@ -113,7 +113,7 @@ def layer_triangle_topomesh_construction(layer_edge_topomesh, positions, omega_c
                                 else:
                                     edge_neighbor_weights[e] = np.min(edge_weights.values(edge_future_triangle_edges))
             
-            print free_edges
+            # print free_edges
             if len(free_edges)>0:
                 free_edges = list(np.array(free_edges)[np.argsort(-edge_neighbor_weights.values(free_edges))])                    
         layer_triangulation_topomesh.update_wisp_property('barycenter',0,array_dict(positions.values(list(layer_triangulation_topomesh.wisps(0))),list(layer_triangulation_topomesh.wisps(0))))
@@ -160,7 +160,7 @@ def layered_tetrahedra_topomesh_construction(layer_triangle_topomesh, positions,
 
     while len(free_triangles) > 0:
         fid_to_add = free_triangles.pop(0)
-        print "--> Triangle",list(layer_triangle_topomesh.borders(2,fid_to_add))," : ",triangle_neighbor_weights[fid_to_add]
+        # print "--> Triangle",list(layer_triangle_topomesh.borders(2,fid_to_add))," : ",triangle_neighbor_weights[fid_to_add]
         
         triangle_vertex_edges = np.concatenate([list(set(layer_triangle_topomesh.regions(0,c)).difference(set(layer_triangle_topomesh.borders(2,fid_to_add)))) for c in layer_triangle_topomesh.borders(2,fid_to_add,2)])
         triangle_vertex_edge_vertices = np.concatenate([c*np.ones(layer_triangle_topomesh.nb_regions(0,c)-2) for c in layer_triangle_topomesh.borders(2,fid_to_add,2)])
@@ -205,7 +205,7 @@ def layered_tetrahedra_topomesh_construction(layer_triangle_topomesh, positions,
                                 tetra_triangle_intersection = [False]
                             if not np.any(tetra_triangle_intersection):
                                 tid = constructed_triangulation_topomesh.add_wisp(3)
-                                print "  --> Tetrahedron",tid,tetra_vertices," : ", triangle_weights.values(tetra_triangles[1:]).min()
+                                # print "  --> Tetrahedron",tid,tetra_vertices," : ", triangle_weights.values(tetra_triangles[1:]).min()
                                 for c in tetra_vertices:
                                     if not constructed_triangulation_topomesh.has_wisp(0,c):
                                         constructed_triangulation_topomesh.add_wisp(0,c)

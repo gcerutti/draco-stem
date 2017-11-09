@@ -32,7 +32,7 @@ from copy import deepcopy
 from time import time
 
 
-def optimize_topomesh(input_topomesh,omega_forces={'regularization':0.00,'laplacian':1.0,'planarization':0.27,'epidermis_planarization':0.07},omega_regularization_max=None,iterations=20,edge_flip=False,**kwargs):
+def optimize_topomesh(input_topomesh,omega_forces={'regularization':0.00,'laplacian':1.0,'planarization':0.27,'epidermis_planarization':0.07},omega_regularization_max=None,iterations=20,edge_flip=False,verbose=True,**kwargs):
     """
     """
 
@@ -161,11 +161,12 @@ def optimize_topomesh(input_topomesh,omega_forces={'regularization':0.00,'laplac
 
     for iteration in xrange(iterations/iterations_per_step+1):
 
-        print "_____________________________"
-        print ""
-        print "       Iteration ",iteration
-        print "_____________________________"
-        start_time = time()
+        if verbose:
+            print "_____________________________"
+            print ""
+            print "       Iteration ",iteration
+            print "_____________________________"
+            start_time = time()
         
         gaussian_sigma = kwargs.get('gaussian_sigma',10.0)
         target_areas = kwargs.get('target_areas',None)
@@ -210,13 +211,16 @@ def optimize_topomesh(input_topomesh,omega_forces={'regularization':0.00,'laplac
 
         if display:
             pass
-            
-        end_time = time()
-        print "_____________________________"
-        print ""
-        print "      [",end_time-start_time,"s]"
+           
+        if verbose: 
+            end_time = time()
+            print "_____________________________"
+            print ""
+            print "      [",end_time-start_time,"s]"
     #raw_input()
-    print "_____________________________"
+
+    if verbose: 
+        print "_____________________________"
 
     optimization_end_time = time()
     print "--> Optimizing Topomesh    [",optimization_end_time - optimization_start_time,"s]"
