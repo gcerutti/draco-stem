@@ -36,7 +36,6 @@ from vplants.tissue_analysis.temporal_graph_from_image import graph_from_image
 from time                                   import time
 from copy                                   import deepcopy
 import os
-import sys
 import pickle
 
 

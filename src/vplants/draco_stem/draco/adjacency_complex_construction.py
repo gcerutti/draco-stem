@@ -20,7 +20,6 @@ from vplants.cellcomplex.property_topomesh.utils.evaluation_tools import jaccard
 from vplants.cellcomplex.property_topomesh.utils.array_tools import array_unique
 from vplants.cellcomplex.property_topomesh.utils.geometry_tools import tetra_geometric_features, triangle_geometric_features
 
-from sys                                    import argv
 from time                                   import time, sleep
 
 tetra_triangle_edge_list  = np.array([[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]])

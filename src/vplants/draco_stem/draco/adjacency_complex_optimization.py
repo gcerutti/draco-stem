@@ -42,7 +42,6 @@ from vplants.cellcomplex.property_topomesh.utils.evaluation_tools import jaccard
 from vplants.cellcomplex.property_topomesh.utils.array_tools import array_unique
 from vplants.cellcomplex.property_topomesh.utils.geometry_tools import tetra_geometric_features, triangle_geometric_features
 
-from sys                                    import argv
 from time                                   import time, sleep
 from copy                                   import deepcopy
 
