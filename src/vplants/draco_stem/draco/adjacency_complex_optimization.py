@@ -124,7 +124,7 @@ def tetrahedra_from_triangulation(triangulation_triangles,positions,exterior=Tru
     return triangulation_tetrahedra
 
 
-def tetrahedrization_simulated_annealing_optimization(tetrahedra,positions,image_cell_vertex=None,omega_energies={'image':1.0,'adjacency':1.0},n_iterations=1,**kwargs):
+def tetrahedrization_simulated_annealing_optimization(tetrahedra,positions,image_cell_vertex=None,omega_energies={'image':1.0,'adjacency':1.0},n_iterations=1,verbose=False,**kwargs):
     """
     """
 
@@ -164,11 +164,12 @@ def tetrahedrization_simulated_annealing_optimization(tetrahedra,positions,image
     step = 0
 
     for iteration in xrange(n_iterations):
-        print "_____________________________"
-        print ""
-        print "Iteration ",iteration
-        print "_____________________________"
-        print ""
+        if verbose:
+            print "_____________________________"
+            print ""
+            print "Iteration ",iteration
+            print "_____________________________"
+            print ""
 
         simulated_annealing_temperature = simulated_annealing_initial_temperature
         n_flips = 1
@@ -437,11 +438,12 @@ def tetrahedrization_simulated_annealing_optimization(tetrahedra,positions,image
             if display:
                 pass
 
-            print n_flips," Triangles flipped (",n_double_flips," double, ",n_annealing_flips," non-optimal)     [ T = ",simulated_annealing_temperature,"]"
+            if verbose:
+                print n_flips," Triangles flipped (",n_double_flips," double, ",n_annealing_flips," non-optimal)     [ T = ",simulated_annealing_temperature,"]"
             
-            if image_cell_vertex != None:
-                cell_vertex_jaccard = jaccard_index(np.sort(image_cell_vertex.keys()),triangulation_tetrahedra)
-                print "Cell vertices Jaccard : ",cell_vertex_jaccard 
+                if image_cell_vertex != None:
+                    cell_vertex_jaccard = jaccard_index(np.sort(image_cell_vertex.keys()),triangulation_tetrahedra)
+                    print "Cell vertices Jaccard : ",cell_vertex_jaccard 
     return triangulation_tetrahedra
 
 
@@ -842,7 +844,7 @@ def tetrahedrization_clean_surface(initial_triangulation_topomesh, image_cell_ve
     return triangulation_topomesh
 
 
-def tetrahedrization_topomesh_topological_optimization(input_triangulation_topomesh,omega_energies={'geometry':10.0,'adjacency':0.05},image_cell_vertex=None,image_graph=None,**kwargs):
+def tetrahedrization_topomesh_topological_optimization(input_triangulation_topomesh,omega_energies={'geometry':10.0,'adjacency':0.05},image_cell_vertex=None,image_graph=None,verbose=False,**kwargs):
     """
     Optimize a 3D simplicial complex of cell adjacency to make it fit the actual adjacencies in the image_topomesh
 
@@ -887,11 +889,12 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
     n_iterations = kwargs.get('n_iterations', 1)
 
     for iteration in xrange(n_iterations):
-        print "_____________________________"
-        print ""
-        print "Iteration ",iteration
-        print "_____________________________"
-        print ""
+        if verbose:
+            print "_____________________________"
+            print ""
+            print "Iteration ",iteration
+            print "_____________________________"
+            print ""
 
         simulated_annealing_temperature = simulated_annealing_initial_temperature
         n_flips = 1
@@ -938,7 +941,7 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
             
             edge_vectors = edge_exterior_positions(positions,exterior_positions,edge_cells[:,1])
             edge_vectors -= edge_exterior_positions(positions,exterior_positions,edge_cells[:,0])
-            edge_vectors = edge_vectors/np.linalg.norm(edge_vectors,axis=1)[:,np.newaxis]
+            edge_vectors = edge_vectors/np.maximum(1e-5,np.linalg.norm(edge_vectors,axis=1))[:,np.newaxis]
             
             def project(points,plane_center,normal_vector):
                 import numpy as np
@@ -994,7 +997,7 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                     edge_matching_flipped_tetras = nd.sum(matching_flipped_tetras,matching_flipped_tetra_edges,index=triangulation_topomesh.wisp_property('cells',1).keys())
                     edge_image_energy_variation = edge_matching_tetras - edge_matching_flipped_tetras
                     edge_energy_variation += omega_energies['image']*edge_image_energy_variation
-                
+
                 if omega_energies.has_key('adjacency'):
                     cell_adjacencies = np.array([len(list(triangulation_topomesh.region_neighbors(0,c))) for c in triangulation_topomesh.wisps(0)])
                     cell_exterior_adjacencies = np.array([1 in triangulation_topomesh.region_neighbors(0,c) for c in triangulation_topomesh.wisps(0)])
@@ -1036,13 +1039,14 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                     edge_geometry_energy_variation = -np.array(map(np.mean,edge_tetra_max_distance)) + np.array(map(np.mean,edge_flipped_tetra_max_distance))
                     edge_geometry_energy_variation += 10.*(-np.array(map(np.max,edge_tetra_eccentricity)) + np.array(map(np.max,edge_flipped_tetra_eccentricity)))
                     edge_energy_variation += omega_energies['geometry']*edge_geometry_energy_variation
-                
+    
                 
                 edge_energy_variation[True-flippable_edges] = 1000.
                 sorted_energy_edges = np.argsort(edge_energy_variation)
                 
-                end_time = time()
-                print "--> Computing edge flip energy variations [",end_time-start_time,"s]"
+                if verbose:
+                    end_time = time()
+                    print "--> Computing edge flip energy variations [",end_time-start_time,"s]"
                 
                 flip_start_time = time()
                 flipped_edges = []
@@ -1053,18 +1057,18 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                     start_time = time()
                     edge_id = triangulation_topomesh.wisp_property('cells',1).keys()[edge_to_flip]
                     energy_variation = edge_energy_variation[edge_to_flip]
-                    
-                    cell_flip_probability = np.exp(-energy_variation/simulated_annealing_temperature)
+
                     if edge_id in modified_edges or energy_variation >= 1000:
                         cell_flip_probability = 0.
                     else:
+                        cell_flip_probability = np.exp(-energy_variation/simulated_annealing_temperature)
                         tetras = edge_tetras[edge_to_flip]
                         flipped_tetras = edge_flipped_tetras[edge_to_flip]
                         cells = edge_cells[edge_to_flip]
                         neighbor_cells = edge_neighbor_cells[edge_to_flip]
                         
                         neighbor_edges = array_unique(np.sort(np.concatenate([[list(triangulation_topomesh.borders(1,e)) for e in triangulation_topomesh.regions(0,c)] for c in neighbor_cells])))
-                        
+
                         existing_edges = np.sort([list(triangulation_topomesh.borders(1,e)) for e in list(triangulation_topomesh.region_neighbors(1,edge_id))])
                         existing_edge_count = np.array([len(list(triangulation_topomesh.regions(1,e,2))) for e in list(triangulation_topomesh.region_neighbors(1,edge_id))])
             
@@ -1107,7 +1111,7 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                         for e,match,distance in zip(flipped_tetra_edge_cells,flipped_tetra_edge_matching[0],flipped_tetra_edge_matching[1]):
                             if distance == 0:
                                 edge_eids[tuple(e)] = edge_neighbor_edges[match]
-                                
+
                         edge_flipped_tids = []
                         for tetra in flipped_tetras:
                             tid = triangulation_topomesh.add_wisp(3)
@@ -1153,8 +1157,9 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                         #modified_edges += list(triangulation_topomesh.border_neighbors(1,edge_id))
                         #modified_edges += list(np.unique(np.concatenate([list(triangulation_topomesh.region_neighbors(1,e)) for e in edge_eids.values()])))
                         
-                        end_time = time()
-                        print "  --> Flipped edge ",edge_id," : ",edge_tids," -> ",edge_flipped_tids," (dE = ",energy_variation,") [",end_time-start_time,"s]" 
+                        if verbose:
+                            end_time = time()
+                            print "  --> Flipped edge ",edge_id," : ",edge_tids," -> ",edge_flipped_tids," (dE = ",energy_variation,") [",end_time-start_time,"s]" 
                         
                 flip_end_time = time()
                 print len(flipped_edges),' Edges Flipped (',len(suboptimal_flipped_edges),' non-optimal) [',flip_end_time-flip_start_time,'s]'
@@ -1254,8 +1259,10 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                     
                 triangle_energy_variation[True-flippable_triangles] = 1000.
                 sorted_energy_triangles = np.argsort(triangle_energy_variation)
-                end_time = time()
-                print "<-- Computing triangle flip energy variations [",end_time-start_time,"s]"
+
+                if verbose:
+                    end_time = time()
+                    print "<-- Computing triangle flip energy variations [",end_time-start_time,"s]"
                             
                 flipped_triangles = []
                 suboptimal_flipped_triangles = []
@@ -1267,10 +1274,10 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                     triangle_id = triangulation_topomesh.wisp_property('cells',2).keys()[triangle_to_flip]
                     energy_variation = triangle_energy_variation[triangle_to_flip]
                     
-                    cell_flip_probability = np.exp(-energy_variation/simulated_annealing_temperature)
                     if triangle_id in modified_triangles or energy_variation >= 1000:
                         cell_flip_probability = 0.
                     else:
+                        cell_flip_probability = np.exp(-energy_variation/simulated_annealing_temperature)
                         tetras = triangle_tetras[triangle_to_flip]
                         flipped_tetras = triangle_flipped_tetras[triangle_to_flip]
                         cells = triangle_cells[triangle_to_flip]
@@ -1352,8 +1359,9 @@ def tetrahedrization_topomesh_topological_optimization(input_triangulation_topom
                         
                         modified_triangles += triangle_fids.values()
 
-                        end_time = time()
-                        print "  --> Flipped triangle ",triangle_id," : ",triangle_tids," -> ",triangle_flipped_tids," (dE = ",energy_variation,") [",end_time-start_time,"s]" 
+                        if verbose:
+                            end_time = time()
+                            print "  --> Flipped triangle ",triangle_id," : ",triangle_tids," -> ",triangle_flipped_tids," (dE = ",energy_variation,") [",end_time-start_time,"s]" 
 
                 flip_end_time = time()
                         
