@@ -138,7 +138,7 @@ class DracoMesh(object):
             None
         """
 
-        self.image_graph = graph_from_image(self.segmented_image, spatio_temporal_properties=['volume','barycenter','L1'], ignore_cells_at_stack_margins=False, property_as_real=True)   
+        self.image_graph = graph_from_image(self.segmented_image, spatio_temporal_properties=['volume','barycenter','L1','border'], ignore_cells_at_stack_margins=False, property_as_real=True)   
         self.image_labels = np.array(list(self.image_graph.vertices()))
         self.image_cell_volumes = array_dict([self.image_graph.vertex_property('volume')[v] for v in self.image_labels],self.image_labels)
         img_center = np.nanmean(self.image_graph.vertex_property('barycenter').values(),axis=0)
