@@ -129,7 +129,8 @@ def optimize_topomesh(input_topomesh,omega_forces={'regularization':0.00,'laplac
         end_time = time()
         print "<-- Computing mesh cell vertices [",end_time-start_time,"s]"
 
-        cell_vertex_matching = vq(np.sort(array_dict(image_cell_vertex).keys()),np.sort(array_dict(mesh_cell_vertex).keys()))
+        # cell_vertex_matching = vq(np.sort(array_dict(image_cell_vertex).keys()),np.sort(array_dict(mesh_cell_vertex).keys()))
+        cell_vertex_matching = vq(np.sort(np.array(image_cell_vertex.keys())),np.sort(np.array(mesh_cell_vertex.keys())))
 
         matched_image_index = np.where(cell_vertex_matching[1] == 0)[0]
         matched_mesh_index = cell_vertex_matching[0][np.where(cell_vertex_matching[1] == 0)[0]]
